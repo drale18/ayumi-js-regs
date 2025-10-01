@@ -1,6 +1,6 @@
 /* Author: Peter Sovietov */
 /* Javascript version: Alexander Kovalenko */
-/* Registers and stereo/mono: Dragoljub Obradovic */
+/* Registers and mono: Dragoljub Obradovic */
 
 const DECIMATE_FACTOR = 8;
 const FIR_SIZE = 192;
@@ -44,7 +44,7 @@ const YM_DAC_TABLE = [
   0.879926756695, 1.0
 ]
 
-Ayumi = function(stereo) {
+Ayumi = function(mono) {
   this.channels = this.getChannels();
 
   this.noisePeriod = 0;
@@ -65,7 +65,7 @@ Ayumi = function(stereo) {
 
   this.left = 0.0;
   this.right = 0.0;
-  this.stereo = stereo===true;
+  this.stereo = !(mono===true);
 
   this.interpolatorLeft = {
    c: new Float64Array(4),
