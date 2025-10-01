@@ -1,6 +1,6 @@
 /* Author: Peter Sovietov */
 /* Javascript version: Alexander Kovalenko */
-/* Registers and mono: Dragoljub Obradovic */
+/* Registers and stereo/mono: Dragoljub Obradovic */
 
 const DECIMATE_FACTOR = 8;
 const FIR_SIZE = 192;
