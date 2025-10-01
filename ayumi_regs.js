@@ -44,7 +44,7 @@ const YM_DAC_TABLE = [
   0.879926756695, 1.0
 ]
 
-Ayumi = function(mono) {
+Ayumi = function(mode) {
   this.channels = this.getChannels();
 
   this.noisePeriod = 0;
@@ -65,7 +65,7 @@ Ayumi = function(mono) {
 
   this.left = 0.0;
   this.right = 0.0;
-  this.stereo = !(mono===true);
+  this.stereo = mode!=="mono";
 
   this.interpolatorLeft = {
    c: new Float64Array(4),
