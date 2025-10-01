@@ -7,4 +7,4 @@ Ported to JavaScript from [original Ayumi C code by Peter Sovietov](https://gith
 
 Added registers and mono audio mode.
 
-Used by [GALe](https://galaksija.net)
+Used by [GALe](https://galaksija.net).
