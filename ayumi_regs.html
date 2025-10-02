@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="ayumi_regs.js">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ayumi_regs.js</title>
+<style>
+</style>
+</head>
+<body onload="onBodyLoad()">
+<div>
+	<p id="regs_id">
+	</p>
+	<p>
+		<button onclick="buttonA440Hz()">A 440Hz</button>
+		<button onclick="buttonReset()">Reset</button>
+	</p>
+</div>
+<script src="ayumi_regs.js"></script>
+<script>
+"use strict";
+
+var ayumi=new Ayumi("mono");
+ayumi.my_fillBuffer=function(e) { // no this here
+	var left=e.outputBuffer.getChannelData(0);
+	for(let i=0;i<left.length;i++) {
+		ayumi.process();ayumi.removeDC();
+		left[i]=ayumi.left;
+		}
+	return true;
+	}
+ayumi.my_start=function(clockRate,sampleRate) {
+	var AudioContext=window.AudioContext||window.webkitAudioContext;
+	this.audioContext=new AudioContext({sampleRate:sampleRate});
+	this.configure(true,clockRate,sampleRate);
+
+	this.audioNode=this.audioContext.createScriptProcessor(256,0,1); // 10.67ms @ 24000Hz
+	this.audioNode.onaudioprocess=this.my_fillBuffer;
+	this.audioNode.connect(this.audioContext.destination);
+	}
+ayumi.my_resume=function() {this.audioContext.resume();}
+
+function setInput(r,v) {
+	if (ayumi) ayumi.my_resume();
+	document.getElementById("reg"+r).value=v;
+	document.getElementById("reg"+r).oninput();
+	}
+
+function buttonReset() {
+	for (let r=0;r<14;r++)
+		setInput(r,0);
+	}
+
+function buttonA440Hz() {
+	buttonReset();
+	
+	setInput(7,62);
+	setInput(8,15);
+	setInput(0,218);
+	}
+
+function onBodyLoad() {
+	for (let r=0;r<14;r++) {
+		let l=document.createElement("label");
+		l.innerText="R"+r+": ";
+		let i=document.createElement("input");
+		i.type="number";i.id="reg"+r;
+		i.value="0";i.min="0";i.max="255";i.step="1";
+		i.oninput=function () {if (ayumi) ayumi.setReg(i.id.substring(3),i.value);}
+		document.getElementById("regs_id").appendChild(l);
+		document.getElementById("regs_id").appendChild(i);
+		document.getElementById("regs_id").appendChild(document.createElement("br"));
+		}
+	if (ayumi) ayumi.my_start(1536000,24000);
+	}
+</script>
+</body>
+</html>
