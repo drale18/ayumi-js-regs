@@ -39,9 +39,10 @@ ayumi.my_start=function(clockRate,sampleRate) {
 	this.audioNode.onaudioprocess=this.my_fillBuffer;
 	this.audioNode.connect(this.audioContext.destination);
 	}
+ayumi.my_resume=function() {this.audioContext.resume();}
 
 function setInput(r,v) {
-	ayumi.audioContext.resume();
+	if (ayumi) ayumi.my_resume();
 	document.getElementById("reg"+r).value=v;
 	document.getElementById("reg"+r).oninput();
 	}
