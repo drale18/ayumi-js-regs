@@ -22,7 +22,7 @@
 "use strict";
 
 var ayumi=new Ayumi("mono");
-ayumi.my_fillBuffer=function(e) {
+ayumi.my_fillBuffer=function(e) { // no this here
 	var left=e.outputBuffer.getChannelData(0);
 	for(let i=0;i<left.length;i++) {
 		ayumi.process();ayumi.removeDC();
@@ -32,15 +32,16 @@ ayumi.my_fillBuffer=function(e) {
 	}
 ayumi.my_start=function(clockRate,sampleRate) {
 	var AudioContext=window.AudioContext||window.webkitAudioContext;
-	var audioContext=new AudioContext({sampleRate:sampleRate});
-	ayumi.configure(true,clockRate,sampleRate);
+	this.audioContext=new AudioContext({sampleRate:sampleRate});
+	this.configure(true,clockRate,sampleRate);
 
-	var audioNode=audioContext.createScriptProcessor(256,0,1); // 10.67ms @ 24000Hz
-	audioNode.onaudioprocess = ayumi.my_fillBuffer;
-	audioNode.connect(audioContext.destination);
+	this.audioNode=this.audioContext.createScriptProcessor(256,0,1); // 10.67ms @ 24000Hz
+	this.audioNode.onaudioprocess=this.my_fillBuffer;
+	this.audioNode.connect(this.audioContext.destination);
 	}
 
 function setInput(r,v) {
+	ayumi.audioContext.resume();
 	document.getElementById("reg"+r).value=v;
 	document.getElementById("reg"+r).oninput();
 	}
